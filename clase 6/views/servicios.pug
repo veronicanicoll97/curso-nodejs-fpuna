@@ -1,0 +1,10 @@
+doctype html
+html 
+    include includes/head.pug
+    body 
+        h1 LISTADO DE SERVICIOS
+        ul
+            each servicio in servicios
+                li.servicio(data-servicio = `${servicio.nombre}`)
+                p= servicio.nombre
+        include includes/servicio.pug
