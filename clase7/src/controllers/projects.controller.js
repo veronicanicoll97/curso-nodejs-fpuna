@@ -1,6 +1,10 @@
+const project = require('../models/project')
+const Proyecto = require('../models/project')
+
 const getProjects = async (req, res) => {
     try{
-        res.send("PROYECTOS")
+        const projects = await Proyecto.find({})
+        res.status(200).send(projects)
     }catch(error){
         return res.status(500).json({message: error.message})
     }
@@ -16,7 +20,11 @@ const getProject = async (req, res) => {
 
 const createProject = async (req, res) => {
     try{
-        res.send("PROYECTO CREADO")
+        let { name, priority, description } = req.body;
+        name = name.toLowerCase()
+        const project = new Proyecto({name, priority, description})
+        await project.save()
+        res.status(201).send(project)
     }catch(error){
         return res.status(500).json({message: error.message})
     }
@@ -25,7 +33,11 @@ const createProject = async (req, res) => {
 
 const updateProject = async (req, res)=>{
     try{
-        res.send("PROYECTO ACTUALIZADO")
+        const { id } = req.params
+        const project = await Proyecto.findById(id)
+        project.set(req.body)
+        project.save()
+        res.status(200).send(project)
     }catch(error){
         return res.status(500).json({message: error.message})
     }
@@ -33,7 +45,9 @@ const updateProject = async (req, res)=>{
 
 const deleteProject = async (req, res)=>{
     try{
-        res.send("PROYECTO ELIMINADO")
+        const { id } = req.params
+        const deletedProject = await Proyecto.findByIdAndDelete(id)
+        res.status(200).send(deletedProject)
     }catch(error){
         return res.status(500).json({message: error.message})
     }
