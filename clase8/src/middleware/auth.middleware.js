@@ -1,6 +1,7 @@
 const { verify } = require("jsonwebtoken");
+const User = require("../models/user");
 
-const SECRET = '123456789qwerty';
+const SECRET = process.env.JWT_SECRET;
 
 const verifyToken = (req, res, next) => {
   let payload;
@@ -8,7 +9,7 @@ const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
 
   if (!token) {
-    return res.status(401).json({message: 'No estas autenticado'});
+    return res.status(401).json({ message: 'No estas autenticado' });
   }
 
   try {
@@ -16,8 +17,22 @@ const verifyToken = (req, res, next) => {
     req.user = payload.id;
     return next();
   } catch (error) {
-    return res.status(401).json({message: 'No estas autenticado'});
+    return res.status(401).json({ message: 'No estas autenticado' });
   }
 }
 
-module.exports = {verifyToken};
+const verificarRole = async (req, res, next) => {
+  const id = req.user;
+  try {
+    const user = await User.findByPk(id);
+    if (!user.isAdmin) {
+      return res.status(403).json({ message: 'No tienes los permisos' });
+    }
+    return next();
+  } catch (error) {
+    return res.status(403).json({ message: 'No tienes los permisos' });
+  }
+}
+
+
+module.exports = { verifyToken, verificarRole };

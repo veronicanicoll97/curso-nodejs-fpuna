@@ -2,7 +2,7 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const {sign} = require('jsonwebtoken');
 
-const SECRET = '123456789qwerty';
+const SECRET = process.env.JWT_SECRET;
 
 const signUp = async (req, res) => {
   try {

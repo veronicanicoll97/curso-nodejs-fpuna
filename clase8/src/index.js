@@ -1,10 +1,15 @@
 const express = require('express');
 const sequelize = require('./database/database');
 
+require('dotenv').config();
+
+
+
 const authRoutes = require('./routes/auth.routes');
 const categoriaRouter = require('./routes/categoria.routes');
 
-const PORT = 5000;
+
+const PORT = 5002;
 
 const app = express();
 
